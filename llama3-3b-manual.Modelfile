@@ -1,0 +1,5 @@
+FROM /LLM_models_host/llama-3.2-3b-instruct-q4_k_m.gguf
+TEMPLATE """{{ if .System }}<|start_header_id|>system<|end_header_id|>\n{{ .System }}<|eot_id|>\n{{ end }}<|start_header_id|>user<|end_header_id|>\n{{ .Prompt }}<|eot_id|>\n<|start_header_id|>assistant<|end_header_id|>\n{{ .Response }}<|eot_id|>"""
+PARAMETER stop "<|start_header_id|>"
+PARAMETER stop "<|end_header_id|>"
+PARAMETER stop "<|eot_id|>"

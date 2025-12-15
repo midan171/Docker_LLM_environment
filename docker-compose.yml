@@ -9,18 +9,18 @@ services:
     volumes:
       # Persistent storage for downloaded models
       - ./ollama-data:/root/.ollama
+      - ./LLM_models:/LLM_models_host
     restart: unless-stopped
     # Optional: If you have an NVIDIA GPU, uncomment the lines below to enable hardware acceleration
-    # environment:
-    #   - NVIDIA_VISIBLE_DEVICES=all
-    #   - NVIDIA_DRIVER_CAPABILITIES=all
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: all
-    #           capabilities: [gpu]
+    environment:
+      - OLLAMA_KEEP_ALIVE=-1  # Keeps all models loaded indefinitely (forever)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
 
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
@@ -35,3 +35,9 @@ services:
       # This connects the WebUI to the Ollama service
       - OLLAMA_BASE_URL=http://ollama:11434
     restart: unless-stopped
+
+
+# Define persistent volumes
+volumes:
+  ollama-data:
+  open-webui-data:

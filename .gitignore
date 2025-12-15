@@ -1,0 +1,4 @@
+# Ignore persistent data directories created by docker-compose
+/ollama-data/
+/open-webui-data/
+/LLM_models/
