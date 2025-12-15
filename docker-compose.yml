@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    # Expose port 11434 for the Ollama API
+    ports:
+      - 11434:11434
+    volumes:
+      # Persistent storage for downloaded models
+      - ./ollama-data:/root/.ollama
+    restart: unless-stopped
+    # Optional: If you have an NVIDIA GPU, uncomment the lines below to enable hardware acceleration
+    # environment:
+    #   - NVIDIA_VISIBLE_DEVICES=all
+    #   - NVIDIA_DRIVER_CAPABILITIES=all
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    # Expose port 3000 for the chat interface
+    ports:
+      - 3000:8080
+    volumes:
+      # Persistent storage for chat history and settings
+      - ./open-webui-data:/app/backend/data
+    environment:
+      # This connects the WebUI to the Ollama service
+      - OLLAMA_BASE_URL=http://ollama:11434
+    restart: unless-stopped
